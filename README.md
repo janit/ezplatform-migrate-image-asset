@@ -1,4 +1,4 @@
-# Migrate image field data to image assets in eZ Platform
+# Migrate eZ Platform image field data to image assets
 
 This repository contains an eZ Platform 3.x compatible Symfony
 command that migrates data from the <a href="https://doc.ezplatform.com/en/latest/api/field_type_reference/#image-field-type">image field type</a> to the <a href="https://doc.ezplatform.com/en/latest/api/field_type_reference/#imageasset-field-type">image asset field type</a>.
