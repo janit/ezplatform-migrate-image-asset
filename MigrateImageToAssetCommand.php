@@ -41,11 +41,10 @@ class MigrateImageToAssetCommand extends Command
     private $contentTypeService;
     private $locationService;
     private $searchService;
-    protected $permissionResolver;
-    protected $userService;
+    private $permissionResolver;
+    private $userService;
 
     public function __construct(
-        string $name = null,
         ContentService $contentService,
         ContentTypeService $contentTypeService,
         LocationService $locationService,
@@ -60,7 +59,8 @@ class MigrateImageToAssetCommand extends Command
         $this->searchService = $searchService;
         $this->permissionResolver = $permissionResolver;
         $this->userService = $userService;
-        parent::__construct($name);
+
+        parent::__construct();
     }
 
     protected function configure()
