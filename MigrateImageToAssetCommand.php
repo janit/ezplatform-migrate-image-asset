@@ -117,7 +117,7 @@ class MigrateImageToAssetCommand extends Command
 
     private function updateContentObject(ContentObject $contentObject, $sourceFieldIdentifier, $targetFieldIdentifier, $imageTargetLocationId): void
     {
-        $imageObjectRemoteId = 'image-asset-' . $contentObject->id . '-' . $contentObject->getField($sourceFieldIdentifier)->fieldDefIdentifier;
+        $imageObjectRemoteId = $this->getImageRemoteId($contentObject, $sourceFieldIdentifier);
 
         $imageFieldValue = $contentObject->getFieldValue($sourceFieldIdentifier);
         $imageObject = $this->createOrUpdateImage($imageObjectRemoteId, $imageTargetLocationId, $imageFieldValue);
@@ -168,5 +168,14 @@ class MigrateImageToAssetCommand extends Command
         }
 
         return $content;
+    }
+
+    private function getImageRemoteId(ContentObject $contentObject, $sourceFieldIdentifier): string
+    {
+        return sprintf(
+            'image-asset-%d-%s',
+            $contentObject->id,
+            $contentObject->getField($sourceFieldIdentifier)->fieldDefIdentifier
+        );
     }
 }
