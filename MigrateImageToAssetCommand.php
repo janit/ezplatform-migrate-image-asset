@@ -17,6 +17,7 @@ use eZ\Publish\API\Repository\ContentService;
 use eZ\Publish\API\Repository\ContentTypeService;
 use eZ\Publish\API\Repository\LocationService;
 use eZ\Publish\API\Repository\SearchService;
+use eZ\Publish\API\Repository\Values\Content\Search\SearchResult;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,7 +25,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 use eZ\Publish\API\Repository\Values\Content\Query;
-use eZ\Publish\Core\Repository\Values\Content\Content as ContentObject;
+use eZ\Publish\API\Repository\Values\Content\Content as ContentObject;
 use eZ\Publish\Core\FieldType\Image\Value as ImageFieldValue;
 use eZ\Publish\API\Repository\PermissionResolver;
 use eZ\Publish\API\Repository\UserService;
@@ -97,15 +98,13 @@ class MigrateImageToAssetCommand extends Command
         return 0;
     }
 
-    private function loadContentObjects($contentTypeIdentifier): array
+    private function loadContentObjects($contentTypeIdentifier): SearchResult
     {
-
         $query = new Query();
         $query->query = new Query\Criterion\ContentTypeIdentifier($contentTypeIdentifier);
         $query->limit = 1000;
-        $result = $this->searchService->findContent($query);
-        return $result->searchHits;
 
+        return $this->searchService->findContent($query);
     }
 
     private function updateContentObject(ContentObject $contentObject, $sourceFieldIdentifier, $targetFieldIdentifier, $imageTargetLocationId): void
