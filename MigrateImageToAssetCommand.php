@@ -28,6 +28,7 @@ use eZ\Publish\Core\Repository\Values\Content\Content as ContentObject;
 use eZ\Publish\Core\FieldType\Image\Value as ImageFieldValue;
 use eZ\Publish\API\Repository\PermissionResolver;
 use eZ\Publish\API\Repository\UserService;
+use eZ\Publish\API\Repository\Exceptions\NotFoundException;
 
 class MigrateImageToAssetCommand extends Command
 {
@@ -150,7 +151,7 @@ class MigrateImageToAssetCommand extends Command
             $draft = $this->contentService->updateContent($contentDraft->versionInfo, $contentUpdateStruct);
             $content = $this->contentService->publishVersion($draft->versionInfo);
 
-        } catch (\eZ\Publish\Core\Base\Exceptions\NotFoundException $e){
+        } catch (NotFoundException $e){
 
             // Not found, create new object
 
