@@ -82,7 +82,7 @@ class MigrateImageToAssetCommand extends Command
         $imageTargetLocationId = $input->getArgument('target_location');
 
         $this->permissionResolver->setCurrentUserReference(
-            $this->userService->loadUser(SELF::IMPORT_USER)
+            $this->userService->loadUser(self::IMPORT_USER)
         );
 
         $searchResults = $this->loadContentObjects($contentTypeIdentifier);
@@ -118,7 +118,7 @@ class MigrateImageToAssetCommand extends Command
         $contentDraft = $this->contentService->createContentDraft( $contentObject->contentInfo );
 
         $contentUpdateStruct = $this->contentService->newContentUpdateStruct();
-        $contentUpdateStruct->initialLanguageCode = SELF::IMAGE_LANGUAGE;
+        $contentUpdateStruct->initialLanguageCode = self::IMAGE_LANGUAGE;
 
         $contentUpdateStruct->setField($targetFieldIdentifier, $imageObject->id);
 
@@ -130,19 +130,19 @@ class MigrateImageToAssetCommand extends Command
     private function createOrUpdateImage(string $remoteId, int $parentLocationId, ImageFieldValue $imageFieldValue): ContentObject
     {
 
-        $contentType = $this->contentTypeService->loadContentTypeByIdentifier(SELF::IMAGE_CONTENT_TYPE);
+        $contentType = $this->contentTypeService->loadContentTypeByIdentifier(self::IMAGE_CONTENT_TYPE);
 
         $imageName = $imageFieldValue->fileName;
         $imagePath = getcwd() . '/public' . $imageFieldValue->uri;
 
         try {
 
-            $contentObject = $this->contentService->loadContentByRemoteId($remoteId, [SELF::IMAGE_LANGUAGE]);
+            $contentObject = $this->contentService->loadContentByRemoteId($remoteId, [self::IMAGE_LANGUAGE]);
 
             $contentDraft = $this->contentService->createContentDraft( $contentObject->contentInfo );
 
             $contentUpdateStruct = $this->contentService->newContentUpdateStruct();
-            $contentUpdateStruct->initialLanguageCode = SELF::IMAGE_LANGUAGE;
+            $contentUpdateStruct->initialLanguageCode = self::IMAGE_LANGUAGE;
 
             $contentUpdateStruct->setField('name', $imageName);
             $contentUpdateStruct->setField('image', $imagePath);
@@ -156,7 +156,7 @@ class MigrateImageToAssetCommand extends Command
 
             try {
 
-                $contentCreateStruct = $this->contentService->newContentCreateStruct($contentType, SELF::IMAGE_LANGUAGE);
+                $contentCreateStruct = $this->contentService->newContentCreateStruct($contentType, self::IMAGE_LANGUAGE);
                 $contentCreateStruct->remoteId = $remoteId;
 
                 $contentCreateStruct->setField('name', $imageName);
