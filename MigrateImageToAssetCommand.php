@@ -1,16 +1,9 @@
 <?php
 
-/*
- * ezplatform-migrate-image-asset
- *
- * This repository contains an eZ Platform 3.x compatible Symfony command that
- * migrates data from the image field type to the image asset field type.
- *
- * More information in the blog post:
- * - https://www.ibexa.co/blog/converting-image-fields-to-use-the-image-asset-field-type-in-ez-platform
- *
+/**
+ * @copyright Copyright (C) eZ Systems AS. All rights reserved.
+ * @license For full copyright and license information view LICENSE file distributed with this source code.
  */
-
 namespace App\Command;
 
 use eZ\Publish\API\Repository\ContentService;
@@ -23,7 +16,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-
 use eZ\Publish\API\Repository\Values\Content\Query;
 use eZ\Publish\API\Repository\Values\Content\Content as ContentObject;
 use eZ\Publish\Core\FieldType\Image\Value as ImageFieldValue;
@@ -34,13 +26,13 @@ use eZ\Publish\API\Repository\Exceptions\Exception as RepositoryException;
 
 class MigrateImageToAssetCommand extends Command
 {
-    private const MIGRATION_ERROR = -1;
-
     protected static $defaultName = 'app:migrate-image-to-asset';
 
-    const IMAGE_CONTENT_TYPE = 'image';
-    const IMAGE_LANGUAGE = 'eng-GB';
-    const IMPORT_USER = 123;
+    private const MIGRATION_ERROR = -1;
+
+    private const IMAGE_CONTENT_TYPE = 'image';
+    private const IMAGE_LANGUAGE = 'eng-GB';
+    private const IMPORT_USER = 123;
 
     private $contentService;
     private $contentTypeService;
@@ -56,8 +48,7 @@ class MigrateImageToAssetCommand extends Command
         SearchService $searchService,
         PermissionResolver $permissionResolver,
         UserService $userService
-    )
-    {
+    ) {
         $this->contentService = $contentService;
         $this->contentTypeService = $contentTypeService;
         $this->locationService = $locationService;
@@ -125,13 +116,12 @@ class MigrateImageToAssetCommand extends Command
 
     private function updateContentObject(ContentObject $contentObject, $sourceFieldIdentifier, $targetFieldIdentifier, $imageTargetLocationId): void
     {
-
         $imageObjectRemoteId = 'image-asset-' . $contentObject->id . '-' . $contentObject->getField($sourceFieldIdentifier)->fieldDefIdentifier;
 
         $imageFieldValue = $contentObject->getFieldValue($sourceFieldIdentifier);
         $imageObject = $this->createOrUpdateImage($imageObjectRemoteId, $imageTargetLocationId, $imageFieldValue);
 
-        $contentDraft = $this->contentService->createContentDraft( $contentObject->contentInfo );
+        $contentDraft = $this->contentService->createContentDraft($contentObject->contentInfo);
 
         $contentUpdateStruct = $this->contentService->newContentUpdateStruct();
         $contentUpdateStruct->initialLanguageCode = self::IMAGE_LANGUAGE;
@@ -140,22 +130,19 @@ class MigrateImageToAssetCommand extends Command
 
         $draft = $this->contentService->updateContent($contentDraft->versionInfo, $contentUpdateStruct);
         $content = $this->contentService->publishVersion($draft->versionInfo);
-
     }
 
     private function createOrUpdateImage(string $remoteId, int $parentLocationId, ImageFieldValue $imageFieldValue): ContentObject
     {
-
         $contentType = $this->contentTypeService->loadContentTypeByIdentifier(self::IMAGE_CONTENT_TYPE);
 
         $imageName = $imageFieldValue->fileName;
         $imagePath = getcwd() . '/public' . $imageFieldValue->uri;
 
         try {
-
             $contentObject = $this->contentService->loadContentByRemoteId($remoteId, [self::IMAGE_LANGUAGE]);
 
-            $contentDraft = $this->contentService->createContentDraft( $contentObject->contentInfo );
+            $contentDraft = $this->contentService->createContentDraft($contentObject->contentInfo);
 
             $contentUpdateStruct = $this->contentService->newContentUpdateStruct();
             $contentUpdateStruct->initialLanguageCode = self::IMAGE_LANGUAGE;
@@ -165,9 +152,7 @@ class MigrateImageToAssetCommand extends Command
 
             $draft = $this->contentService->updateContent($contentDraft->versionInfo, $contentUpdateStruct);
             $content = $this->contentService->publishVersion($draft->versionInfo);
-
-        } catch (NotFoundException $e){
-
+        } catch (NotFoundException $e) {
             // Not found, create new object
 
             $contentCreateStruct = $this->contentService->newContentCreateStruct($contentType, self::IMAGE_LANGUAGE);
@@ -182,8 +167,5 @@ class MigrateImageToAssetCommand extends Command
         }
 
         return $content;
-
     }
-
-
 }
