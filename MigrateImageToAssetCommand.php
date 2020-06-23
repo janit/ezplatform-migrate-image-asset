@@ -28,6 +28,7 @@ class MigrateImageToAssetCommand extends Command
 {
     protected static $defaultName = 'app:migrate-image-to-asset';
 
+    private const MIGRATION_SUCCESS = 0;
     private const MIGRATION_ERROR = -1;
 
     private const IMAGE_CONTENT_TYPE = 'image';
@@ -102,7 +103,7 @@ class MigrateImageToAssetCommand extends Command
             }
         }
 
-        return 0;
+        return self::MIGRATION_SUCCESS;
     }
 
     private function loadContentObjects($contentTypeIdentifier): SearchResult
