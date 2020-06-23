@@ -30,9 +30,12 @@ use eZ\Publish\Core\FieldType\Image\Value as ImageFieldValue;
 use eZ\Publish\API\Repository\PermissionResolver;
 use eZ\Publish\API\Repository\UserService;
 use eZ\Publish\API\Repository\Exceptions\NotFoundException;
+use eZ\Publish\API\Repository\Exceptions\Exception as RepositoryException;
 
 class MigrateImageToAssetCommand extends Command
 {
+    private const MIGRATION_ERROR = -1;
+
     protected static $defaultName = 'app:migrate-image-to-asset';
 
     const IMAGE_CONTENT_TYPE = 'image';
@@ -90,9 +93,22 @@ class MigrateImageToAssetCommand extends Command
         $searchResults = $this->loadContentObjects($contentTypeIdentifier);
 
         foreach ($searchResults as $searchHit) {
+            /** @var ContentObject $contentObject */
             $contentObject = $searchHit->valueObject;
-            $this->updateContentObject($contentObject, $sourceFieldIdentifier, $targetFieldIdentifier, $imageTargetLocationId);
-            $io->writeln('Updated ' . $contentObject->contentInfo->name . ' (' . $contentObject->id . ')');
+
+            try {
+                $this->updateContentObject($contentObject, $sourceFieldIdentifier, $targetFieldIdentifier, $imageTargetLocationId);
+                $io->writeln('Updated ' . $contentObject->contentInfo->name . ' (' . $contentObject->id . ')');
+            } catch (RepositoryException $e) {
+                $io->error(sprintf(
+                    'Unable to update %s (%d): %s',
+                    $contentObject->contentInfo->name,
+                    $contentObject->contentInfo->id,
+                    $e->getMessage()
+                ));
+
+                return self::MIGRATION_ERROR;
+            }
         }
 
         return 0;
@@ -154,26 +170,15 @@ class MigrateImageToAssetCommand extends Command
 
             // Not found, create new object
 
-            try {
+            $contentCreateStruct = $this->contentService->newContentCreateStruct($contentType, self::IMAGE_LANGUAGE);
+            $contentCreateStruct->remoteId = $remoteId;
 
-                $contentCreateStruct = $this->contentService->newContentCreateStruct($contentType, self::IMAGE_LANGUAGE);
-                $contentCreateStruct->remoteId = $remoteId;
+            $contentCreateStruct->setField('name', $imageName);
+            $contentCreateStruct->setField('image', $imagePath);
 
-                $contentCreateStruct->setField('name', $imageName);
-                $contentCreateStruct->setField('image', $imagePath);
-
-                $locationCreateStruct = $this->locationService->newLocationCreateStruct($parentLocationId);
-                $draft = $this->contentService->createContent($contentCreateStruct, [$locationCreateStruct]);
-                $content = $this->contentService->publishVersion($draft->versionInfo);
-
-            } catch (\Exception $e){
-                dump($e);
-                die();
-            }
-
-        } catch (\Exception $e){
-            dump($e);
-            die();
+            $locationCreateStruct = $this->locationService->newLocationCreateStruct($parentLocationId);
+            $draft = $this->contentService->createContent($contentCreateStruct, [$locationCreateStruct]);
+            $content = $this->contentService->publishVersion($draft->versionInfo);
         }
 
         return $content;
