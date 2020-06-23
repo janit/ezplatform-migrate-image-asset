@@ -1,8 +1,13 @@
 <?php
 
-/**
- * @copyright Copyright (C) eZ Systems AS. All rights reserved.
- * @license For full copyright and license information view LICENSE file distributed with this source code.
+/*
+ * ezplatform-migrate-image-asset
+ *
+ * This repository contains an eZ Platform 3.x compatible Symfony command that
+ * migrates data from the image field type to the image asset field type.
+ *
+ * More information in the blog post:
+ * - https://www.ibexa.co/blog/converting-image-fields-to-use-the-image-asset-field-type-in-ez-platform
  */
 namespace App\Command;
 
