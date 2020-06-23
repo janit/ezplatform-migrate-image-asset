@@ -59,7 +59,7 @@ class MigrateImageToAssetCommand extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Copies image field type contents to an image asset field')
