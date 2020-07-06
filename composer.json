@@ -1,0 +1,20 @@
+{
+    "name": "janit/ezplatform-migrate-image-asset",
+    "description": "Copy eZ Platform image field contents to image asset field type",
+    "type": "ezplatform-bundle",
+    "require": {
+        "ezsystems/ezplatform-kernel": "^1.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jani Tarvainen",
+            "email": "janit@iki.fi"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Janit\\MigrateEzImageToAssetBundle\\": "src/",
+        }
+    },
+}
