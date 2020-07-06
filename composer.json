@@ -14,7 +14,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Janit\\MigrateEzImageToAssetBundle\\": "src/",
+            "Janit\\MigrateEzImageToAssetBundle\\": "src/"
         }
     },
 }
