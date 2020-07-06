@@ -1,7 +1,7 @@
 {
     "name": "janit/ezplatform-migrate-image-asset",
     "description": "Copy eZ Platform image field contents to image asset field type",
-    "type": "ezplatform-bundle",
+    "type": "symfony-bundle",
     "require": {
         "ezsystems/ezplatform-kernel": "^1.0"
     },
