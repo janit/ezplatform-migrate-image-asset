@@ -5,9 +5,13 @@ command that migrates data from the <a href="https://doc.ezplatform.com/en/lates
 
 This script does not do any content type modification, it simply copies and links image data to make moving from image fields to image asset fields easier.
 
-To enable this Command you should make sure it is configured appropriately in config/services.yaml as described in <a href="https://symfony.com/doc/current/event_dispatcher.html#creating-an-event-subscriber">the Symfony Event Dispatcher documentation</a>.
+Install the bundle using Composer:
 
-Once enabled you can run the command as follows:
+```
+composer req janit/ezplatform-migrate-image-asset
+```
+
+Once installed you can run the command as follows:
 
 ```
 ./bin/console app:migrate-image-to-asset success_story screenshot screenshot_asset 9372
