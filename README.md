@@ -14,7 +14,7 @@ composer req janit/ezplatform-migrate-image-asset
 Once installed you can run the command as follows:
 
 ```
-./bin/console app:migrate-image-to-asset success_story screenshot screenshot_asset 9372
+./bin/console janit:migrate_image_to_asset success_story screenshot screenshot_asset 9372
 ````
 
 Required arguments are:
