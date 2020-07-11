@@ -2,9 +2,6 @@
     "name": "janit/ezplatform-migrate-image-asset",
     "description": "Copy eZ Platform image field contents to image asset field type",
     "type": "symfony-bundle",
-    "require": {
-        "ezsystems/ezplatform-kernel": "^1.0"
-    },
     "license": "MIT",
     "authors": [
         {
@@ -12,6 +9,16 @@
             "email": "janit@iki.fi"
         }
     ],
+    "require": {
+        "php": "^7.3",
+        "ezsystems/ezplatform-kernel": "^1.0",
+        "symfony/config": "^5.0",
+        "symfony/console": "^5.0",
+        "symfony/dependency-injection": "^5.0",
+        "symfony/http-kernel": "^5.0",
+        "symfony/yaml": "^5.0",
+        "symfony/var-dumper": "^5.0"
+    },
     "autoload": {
         "psr-4": {
             "Janit\\MigrateEzImageToAssetBundle\\": "src/"
